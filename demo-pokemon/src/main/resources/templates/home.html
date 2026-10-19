@@ -10,6 +10,10 @@
         <section class="pokemon-grid">
             <h1>Pokemons</h1>
             <p><a th:href="@{/informacion}">Ver Pokémon destacado →</a></p>
+            <p>
+                <a th:href="@{/pokemon/tabla}">Listado</a> |
+                <a th:href="@{/pokemon/galeria}">Galería</a>
+            </p>
             <div class="cards">
                 <div class="card" th:each="pokemon : ${pokemons}">
                     <div class="card-image">
