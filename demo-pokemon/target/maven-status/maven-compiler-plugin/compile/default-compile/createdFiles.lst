@@ -1,0 +1,10 @@
+es\mariana\dweb\model\entities\Pokemon$MoveEntry.class
+es\mariana\dweb\model\entities\Pokemon$StatEntry.class
+es\mariana\dweb\model\entities\Pokemon$Type.class
+es\mariana\dweb\model\entities\Pokemon$Move.class
+es\mariana\dweb\model\entities\Pokemon$TypeEntry.class
+es\mariana\dweb\model\entities\Pokemon$Ability.class
+es\mariana\dweb\model\entities\Pokemon$Sprites.class
+es\mariana\dweb\model\entities\Pokemon$AbilityEntry.class
+es\mariana\dweb\model\entities\Pokemon$Stat.class
+es\mariana\dweb\model\entities\Pokemon$FormEntry.class

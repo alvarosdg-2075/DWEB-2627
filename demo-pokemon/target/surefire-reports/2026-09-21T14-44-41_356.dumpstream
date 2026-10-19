@@ -1,0 +1,5 @@
+# Created at 2026-09-21T14:44:41.850
+Boot Manifest-JAR contains absolute paths in classpath 'H:\Mi unidad\3. MÓDULOS\DWEB\PROYECTOS\demo-pokemon\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
