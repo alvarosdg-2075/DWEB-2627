@@ -9,6 +9,7 @@
   </style>
 </head>
 <body>
+<div th:replace="~{fragments :: menu}"></div>
 <main class="page">
   <header class="topbar">
     <a class="back-link" th:href="@{/}">← Volver a la Pokédex</a>
@@ -33,5 +34,6 @@
     </article>
   </section>
 </main>
+<div th:replace="~{fragments :: footer}"></div>
 </body>
 </html>

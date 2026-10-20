@@ -6,6 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/home.css}"/>
 </head>
 <body>
+    <div th:replace="~{fragments :: menu}"></div>
     <main class="page">
         <section class="pokemon-grid">
             <h1>Pokemons</h1>
@@ -26,5 +27,6 @@
             </div>
         </section>
     </main>
+    <div th:replace="~{fragments :: footer}"></div>
 </body>
 </html>

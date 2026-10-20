@@ -9,6 +9,7 @@
   </style>
 </head>
 <body>
+<div th:replace="~{fragments :: menu}"></div>
 <main class="page">
   <nav class="nav">
 	<a th:href="@{/}">Inicio</a>
@@ -32,5 +33,6 @@
 	</article>
   </section>
 </main>
+<div th:replace="~{fragments :: footer}"></div>
 </body>
 </html>
