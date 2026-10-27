@@ -24,7 +24,8 @@
     <article class="data-panel">
       <p class="number" th:text="'N.º ' + ${#numbers.formatInteger(pokemon.id, 4)}">N.º 0025</p>
       <h2 class="pokemon-name" th:text="${#strings.capitalize(pokemon.name)}">Pikachu</h2>
-      <p class="message" th:text="'Hoy te presentamos a ' + ${#strings.capitalize(pokemon.name)} + ', nuestro Pokémon destacado.'">Hoy te presentamos a Pikachu, nuestro Pokémon destacado.</p>
+      <p class="message" th:if="${destacado}" th:text="'Hoy te presentamos a ' + ${#strings.capitalize(pokemon.name)} + ', nuestro Pokémon destacado.'">Hoy te presentamos a Pikachu, nuestro Pokémon destacado.</p>
+      <p class="message" th:unless="${destacado}" th:text="'Esta es la ficha de ' + ${#strings.capitalize(pokemon.name)} + '.'">Esta es la ficha de Pikachu.</p>
       <div class="stats">
         <div class="stat"><span class="stat-label">Altura</span><span class="stat-value" th:text="${#numbers.formatDecimal(pokemon.height / 10.0, 1, 'NONE', 1, 'COMMA')} + ' m'">0,4 m</span></div>
         <div class="stat"><span class="stat-label">Peso</span><span class="stat-value" th:text="${#numbers.formatDecimal(pokemon.weight / 10.0, 1, 'NONE', 1, 'COMMA')} + ' kg'">6,0 kg</span></div>

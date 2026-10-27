@@ -37,6 +37,14 @@ public class PokemonService {
         return pokemonRepository.findAll();
     }
 
+    public ArrayList<Pokemon.Type> findAllTypes() {
+        return pokemonRepository.findAllTypes();
+    }
+
+    public ArrayList<Pokemon> findByType(String typeName) {
+        return pokemonRepository.findByType(typeName, 30);
+    }
+
     /* Se conserva para que el controlador actual siga funcionando. */
     public ArrayList<Pokemon> obtenerPokemons() {
         return findAll();

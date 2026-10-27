@@ -6,6 +6,8 @@
 
 <!-- =========================================================
      MENÚ DE NAVEGACIÓN
+     Incluye la opción «Equipo» y, si hay entrenador en sesión,
+     su nombre y el botón «Cerrar sesión».
      ========================================================= -->
 <nav th:fragment="menu" style="
         background-color: #263238;
@@ -66,7 +68,188 @@
         Batalla
     </a>
 
+    <a th:href="@{/pokemon/equipo}"
+       style="
+          color: white;
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 16px;
+       ">
+        Equipo
+    </a>
+
+    <!-- Zona del entrenador: solo aparece si hay entrenador en sesión -->
+    <div th:if="${session.entrenador != null}"
+         style="
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+         ">
+        <span style="color: #cfd8dc; font-size: 15px;">
+            Entrenador:
+            <strong style="color: white;" th:text="${session.entrenador}">Ash</strong>
+        </span>
+
+        <form th:action="@{/pokemon/cerrar-sesion}" method="post" style="margin: 0;">
+            <button type="submit"
+                    style="
+                       padding: 7px 14px;
+                       border: 1px solid #90a4ae;
+                       border-radius: 8px;
+                       background: transparent;
+                       color: white;
+                       font-weight: bold;
+                       font-size: 14px;
+                       cursor: pointer;
+                    ">
+                Cerrar sesión
+            </button>
+        </form>
+    </div>
+
 </nav>
+
+
+<!-- =========================================================
+     BLOQUE DE ERRORES
+     Solo se muestra si el controlador ha enviado un atributo "error".
+     Uso: th:replace="~{fragments :: errores}"
+     ========================================================= -->
+<div th:fragment="errores" th:if="${error != null}" role="alert" style="
+        margin-bottom: 22px;
+        padding: 14px 18px;
+        background-color: #fef2f2;
+        border: 1px solid #fca5a5;
+        border-left: 6px solid #dc2626;
+        border-radius: 10px;
+        color: #991b1b;
+        font-weight: 600;
+     ">
+    <span th:text="${error}">Mensaje de error de ejemplo.</span>
+</div>
+
+
+<!-- =========================================================
+     FORMULARIO DE FILTROS Y ORDENACIÓN (compartido)
+     Uso: th:replace="~{fragments :: filtros('/pokemon/tabla')}"
+          th:replace="~{fragments :: filtros('/pokemon/galeria')}"
+     ========================================================= -->
+<section th:fragment="filtros(accion)" class="filtros-pokemon" style="
+        margin-bottom: 22px;
+        padding: 20px;
+        background-color: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 16px;
+        box-shadow: 0 8px 20px rgba(15,23,42,0.06);
+     ">
+
+    <style>
+        .filtros-pokemon form { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+        .filtros-pokemon .campo { display: flex; flex-direction: column; gap: 6px; flex: 1 1 160px; }
+        .filtros-pokemon label { font-size: .75rem; font-weight: 800; text-transform: uppercase; color: #64748b; }
+        .filtros-pokemon select,
+        .filtros-pokemon input { padding: 9px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: .95rem; background: #fff; }
+        .filtros-pokemon .acciones { display: flex; gap: 10px; flex: 1 1 100%; }
+        .filtros-pokemon .btn { padding: 10px 18px; border: 0; border-radius: 8px; font-weight: 700; font-size: .95rem; cursor: pointer; text-decoration: none; }
+        .filtros-pokemon .btn-buscar { background: #263238; color: #fff; }
+        .filtros-pokemon .btn-limpiar { background: #e2e8f0; color: #263238; }
+    </style>
+
+    <form method="get" th:action="@{${accion}}" action="/pokemon/tabla">
+
+        <div class="campo">
+            <label for="tipo">Tipo</label>
+            <select id="tipo" name="tipo">
+                <option value="" th:selected="${#strings.isEmpty(tipo)}">Aleatorio</option>
+                <option th:each="t : ${tipos}"
+                        th:value="${t.name}"
+                        th:text="${#strings.capitalize(t.name)}"
+                        th:selected="${t.name == tipo}"
+                        value="fire">Fire</option>
+            </select>
+        </div>
+
+        <div class="campo">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ej.: char"
+                   th:value="${nombre}">
+        </div>
+
+        <div class="campo">
+            <label for="alturaMin">Altura mínima (m)</label>
+            <input type="number" id="alturaMin" name="alturaMin" min="0" step="0.1" placeholder="0.5"
+                   th:value="${alturaMin}">
+        </div>
+
+        <div class="campo">
+            <label for="pesoMax">Peso máximo (kg)</label>
+            <input type="number" id="pesoMax" name="pesoMax" min="0" step="0.1" placeholder="50"
+                   th:value="${pesoMax}">
+        </div>
+
+        <div class="campo">
+            <label for="orden">Ordenar por</label>
+            <select id="orden" name="orden">
+                <option value="" th:selected="${#strings.isEmpty(orden)}">Sin ordenar</option>
+                <option value="nombre" th:selected="${orden == 'nombre'}">Nombre</option>
+                <option value="altura" th:selected="${orden == 'altura'}">Altura</option>
+                <option value="peso" th:selected="${orden == 'peso'}">Peso</option>
+            </select>
+        </div>
+
+        <div class="campo">
+            <label for="direccion">Sentido</label>
+            <select id="direccion" name="direccion">
+                <option value="asc" th:selected="${direccion != 'desc'}">Ascendente</option>
+                <option value="desc" th:selected="${direccion == 'desc'}">Descendente</option>
+            </select>
+        </div>
+
+        <div class="acciones">
+            <button type="submit" class="btn btn-buscar">Buscar</button>
+            <a class="btn btn-limpiar" th:href="@{${accion}}" href="/pokemon/tabla">Limpiar filtros</a>
+        </div>
+
+    </form>
+</section>
+
+
+<!-- =========================================================
+     BOTÓN «AÑADIR AL EQUIPO» (compartido por tabla y galería)
+     Solo aparece si hay entrenador en sesión. Reenvía los filtros
+     actuales como campos ocultos para volver al mismo listado.
+     Uso: th:replace="~{fragments :: anadir(${pokemon}, 'tabla')}"
+          th:replace="~{fragments :: anadir(${pokemon}, 'galeria')}"
+     ========================================================= -->
+<form th:fragment="anadir(pokemon, origen)"
+      th:if="${session.entrenador != null}"
+      th:action="@{/pokemon/equipo/anadir}"
+      method="post"
+      style="margin: 0;">
+    <input type="hidden" name="id" th:value="${pokemon.id}" value="1">
+    <input type="hidden" name="origen" th:value="${origen}" value="tabla">
+    <input type="hidden" name="tipo" th:value="${tipo}">
+    <input type="hidden" name="nombre" th:value="${nombre}">
+    <input type="hidden" name="alturaMin" th:value="${alturaMin}">
+    <input type="hidden" name="pesoMax" th:value="${pesoMax}">
+    <input type="hidden" name="orden" th:value="${orden}">
+    <input type="hidden" name="direccion" th:value="${direccion}">
+    <button type="submit"
+            style="
+               width: 100%;
+               padding: 7px 12px;
+               border: 0;
+               border-radius: 8px;
+               background: #15803d;
+               color: #ffffff;
+               font-weight: 700;
+               font-size: .85rem;
+               cursor: pointer;
+            ">
+        Añadir al equipo
+    </button>
+</form>
 
 
 <!-- =========================================================

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -332,15 +332,17 @@
 
 <body>
 
-<main class="page">
+<div th:replace="~{fragments :: menu}"></div>
 
-  <nav class="nav">
-    <a href="/">Inicio</a>
-    <a href="/informacion">Información</a>
-    <a href="/pokemon/tabla">Lista</a>
-    <a href="/pokemon/batalla">Batalla</a>
-  </nav>
-
+<!--
+  Reglas de la batalla (las del ejemplo estático):
+  - Cada comparación (altura, peso, experiencia) la gana el Pokémon con el valor mayor.
+  - Puntuación = altura + peso + experiencia base (valores tal cual los devuelve la API).
+  - Gana el Pokémon con la puntuación más alta.
+-->
+<main class="page"
+      th:with="puntos1=${pokemon1.height + pokemon1.weight + pokemon1.baseExperience},
+               puntos2=${pokemon2.height + pokemon2.weight + pokemon2.baseExperience}">
 
   <header class="hero">
     <h1>Batalla Pokémon</h1>
@@ -355,25 +357,27 @@
 
       <div class="pokemon-image">
         <img
+          th:src="${pokemon1.imageURL}"
+          th:alt="${pokemon1.name}"
           src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png"
           alt="Charizard">
       </div>
 
       <div class="pokemon-body">
-        <p class="pokemon-number">N.º 0006</p>
-        <h2>Charizard</h2>
+        <p class="pokemon-number" th:text="'N.º ' + ${#numbers.formatInteger(pokemon1.id, 4)}">N.º 0006</p>
+        <h2 th:text="${#strings.capitalize(pokemon1.name)}">Charizard</h2>
         <div class="stats">
           <div class="stat">
             <span class="stat-label">Altura</span>
-            <span class="stat-value">1,7 m</span>
+            <span class="stat-value" th:text="${#numbers.formatDecimal(pokemon1.height / 10.0, 1, 'NONE', 1, 'COMMA')} + ' m'">1,7 m</span>
           </div>
           <div class="stat">
             <span class="stat-label">Peso</span>
-            <span class="stat-value">90,5 kg</span>
+            <span class="stat-value" th:text="${#numbers.formatDecimal(pokemon1.weight / 10.0, 1, 'NONE', 1, 'COMMA')} + ' kg'">90,5 kg</span>
           </div>
           <div class="stat">
             <span class="stat-label">Experiencia</span>
-            <span class="stat-value">267</span>
+            <span class="stat-value" th:text="${pokemon1.baseExperience}">267</span>
           </div>
         </div>
       </div>
@@ -387,24 +391,26 @@
     <article class="pokemon">
       <div class="pokemon-image">
         <img
+          th:src="${pokemon2.imageURL}"
+          th:alt="${pokemon2.name}"
           src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png"
           alt="Blastoise">
       </div>
       <div class="pokemon-body">
-        <p class="pokemon-number">N.º 0009</p>
-        <h2>Blastoise</h2>
+        <p class="pokemon-number" th:text="'N.º ' + ${#numbers.formatInteger(pokemon2.id, 4)}">N.º 0009</p>
+        <h2 th:text="${#strings.capitalize(pokemon2.name)}">Blastoise</h2>
         <div class="stats">
           <div class="stat">
             <span class="stat-label">Altura</span>
-            <span class="stat-value">1,6 m</span>
+            <span class="stat-value" th:text="${#numbers.formatDecimal(pokemon2.height / 10.0, 1, 'NONE', 1, 'COMMA')} + ' m'">1,6 m</span>
           </div>
           <div class="stat">
             <span class="stat-label">Peso</span>
-            <span class="stat-value">85,5 kg</span>
+            <span class="stat-value" th:text="${#numbers.formatDecimal(pokemon2.weight / 10.0, 1, 'NONE', 1, 'COMMA')} + ' kg'">85,5 kg</span>
           </div>
           <div class="stat">
             <span class="stat-label">Experiencia</span>
-            <span class="stat-value">265</span>
+            <span class="stat-value" th:text="${pokemon2.baseExperience}">265</span>
           </div>
         </div>
       </div>
@@ -419,15 +425,18 @@
     <div class="comparison-list">
       <div class="comparison">
         <span class="comparison-label">Altura</span>
-        <span class="comparison-result">Charizard gana</span>
+        <span class="comparison-result"
+              th:text="${pokemon1.height > pokemon2.height ? #strings.capitalize(pokemon1.name) + ' gana' : (pokemon2.height > pokemon1.height ? #strings.capitalize(pokemon2.name) + ' gana' : 'Empate')}">Charizard gana</span>
       </div>
       <div class="comparison">
         <span class="comparison-label">Peso</span>
-        <span class="comparison-result">Charizard gana</span>
+        <span class="comparison-result"
+              th:text="${pokemon1.weight > pokemon2.weight ? #strings.capitalize(pokemon1.name) + ' gana' : (pokemon2.weight > pokemon1.weight ? #strings.capitalize(pokemon2.name) + ' gana' : 'Empate')}">Charizard gana</span>
       </div>
       <div class="comparison">
         <span class="comparison-label">Experiencia</span>
-        <span class="comparison-result">Charizard gana</span>
+        <span class="comparison-result"
+              th:text="${pokemon1.baseExperience > pokemon2.baseExperience ? #strings.capitalize(pokemon1.name) + ' gana' : (pokemon2.baseExperience > pokemon1.baseExperience ? #strings.capitalize(pokemon2.name) + ' gana' : 'Empate')}">Charizard gana</span>
       </div>
     </div>
   </section>
@@ -438,22 +447,23 @@
     <div class="calculation-grid">
       <div class="calculation">
         <span class="calculation-label">Experiencia total</span>
-        <span class="calculation-value">532 puntos</span>
+        <span class="calculation-value" th:text="${pokemon1.baseExperience + pokemon2.baseExperience} + ' puntos'">532 puntos</span>
       </div>
       <div class="calculation">
         <span class="calculation-label">Diferencia de peso</span>
-        <span class="calculation-value">5,0 kg</span>
+        <span class="calculation-value"
+              th:text="${#numbers.formatDecimal((pokemon1.weight > pokemon2.weight ? pokemon1.weight - pokemon2.weight : pokemon2.weight - pokemon1.weight) / 10.0, 1, 'NONE', 1, 'COMMA')} + ' kg'">5,0 kg</span>
       </div>
     </div>
 
     <div class="scores">
       <div class="score">
-        <span class="score-name">Charizard</span>
-        <span class="score-value">1189</span>
+        <span class="score-name" th:text="${#strings.capitalize(pokemon1.name)}">Charizard</span>
+        <span class="score-value" th:text="${puntos1}">1189</span>
       </div>
       <div class="score">
-        <span class="score-name">Blastoise</span>
-        <span class="score-value">1136</span>
+        <span class="score-name" th:text="${#strings.capitalize(pokemon2.name)}">Blastoise</span>
+        <span class="score-value" th:text="${puntos2}">1136</span>
       </div>
     </div>
   </section>
@@ -461,17 +471,15 @@
   <!-- GANADOR -->
   <section class="winner">
     <p class="winner-label">Ganador de la batalla</p>
-    <h2>Charizard es el ganador de la batalla</h2>
-    <a class="new-battle" href="/pokemon/batalla">Nueva batalla</a>
+    <h2 th:text="${puntos1 > puntos2 ? #strings.capitalize(pokemon1.name) + ' es el ganador de la batalla' : (puntos2 > puntos1 ? #strings.capitalize(pokemon2.name) + ' es el ganador de la batalla' : 'La batalla termina en empate')}">Charizard es el ganador de la batalla</h2>
+    <a class="new-battle"
+       th:href="${desdeEquipo} ? @{/pokemon/batalla/{id}(id=${pokemon1.id})} : @{/pokemon/batalla}"
+       href="/pokemon/batalla">Nueva batalla</a>
   </section>
 
-
-  <!-- PIE DE PÁGINA DE EJEMPLO -->
-  <footer class="footer">
-    Pokédex · Desarrollo Web · 2026
-  </footer>
-
 </main>
+
+<div th:replace="~{fragments :: footer}"></div>
 
 </body>
 </html>
